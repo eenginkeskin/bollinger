@@ -1,29 +1,36 @@
 workflows:
   ios-release:
-    name: iOS Release
+    name: iOS App Store Build
     max_build_duration: 60
     instance_type: mac_mini_m2
     integrations:
       app_store_connect: Codemagic
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.enginkeskin.bollinger
       flutter: stable
       xcode: latest
+      cocoapods: default
     scripts:
-      - name: Set up code signing settings on Xcode project
-        script: |
-          xcode-project use-profiles
       - name: Get Flutter packages
+        script: flutter pub get
+      - name: Install CocoaPods dependencies
         script: |
-          flutter packages pub get
+          cd ios
+          pod install
+      - name: Initialize keychain
+        script: keychain initialize
+      - name: Generate private key and fetch signing files
+        script: |
+          CERT_KEY=$(openssl genrsa 2048 2>/dev/null)
+          app-store-connect fetch-signing-files com.enginkeskin.bollinger \
+            --type IOS_APP_STORE \
+            --certificate-key "$CERT_KEY" \
+            --create
+      - name: Add certificates to keychain
+        script: keychain add-certificates
+      - name: Set up code signing
+        script: xcode-project use-profiles
       - name: Build IPA
-        script: |
-          flutter build ipa --release \
-            --build-name=1.0.0 \
-            --build-number=$PROJECT_BUILD_NUMBER \
-            --export-options-plist=/Users/builder/export_options.plist
+        script: flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
