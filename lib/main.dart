@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workmanager/workmanager.dart';
@@ -24,12 +25,21 @@ void main() async {
 
   try {
     await Workmanager().initialize(callbackDispatcher);
-    await Workmanager().registerPeriodicTask(
-      _backgroundTaskName,
-      _backgroundTaskName,
-      frequency: const Duration(minutes: 15),
-      constraints: Constraints(networkType: NetworkType.connected),
-    );
+    if (Platform.isAndroid) {
+      await Workmanager().registerPeriodicTask(
+        _backgroundTaskName,
+        _backgroundTaskName,
+        frequency: const Duration(minutes: 15),
+        constraints: Constraints(networkType: NetworkType.connected),
+      );
+    } else if (Platform.isIOS) {
+      await Workmanager().registerOneOffTask(
+        _backgroundTaskName,
+        _backgroundTaskName,
+        initialDelay: const Duration(minutes: 15),
+        constraints: Constraints(networkType: NetworkType.connected),
+      );
+    }
   } catch (_) {}
 
   runApp(const ProviderScope(child: BollingerApp()));
