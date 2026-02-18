@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter pub get:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(find:*)",
+      "Bash(while read f)",
+      "Bash(do sed -i 's/bolinger/bollinger/g; s/Bolinger/Bollinger/g' \"$f\")",
+      "Bash(done)",
+      "Bash(flutter clean:*)",
+      "Bash(git init:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(gh auth:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}
