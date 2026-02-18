@@ -29,6 +29,12 @@ class BollingerSettingsNotifier extends AsyncNotifier<IndicatorSettings> {
     await _save(updated);
   }
 
+  Future<void> setInterval(String interval) async {
+    final current = await future;
+    final updated = current.copyWith(interval: interval);
+    await _save(updated);
+  }
+
   Future<void> setNotification(String key, bool value) async {
     final current = await future;
     final newNotifs = Map<String, bool>.from(current.notifications);

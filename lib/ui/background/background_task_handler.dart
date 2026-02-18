@@ -45,6 +45,7 @@ Future<bool> backgroundTaskHandler() async {
 
     final period = (settings.params['period'] ?? 20).toInt();
     final stdDev = settings.params['stdDev'] ?? 2.0;
+    final interval = settings.interval;
     final indicator = BollingerBandIndicator(
       period: period,
       stdDevMultiplier: stdDev,
@@ -55,7 +56,7 @@ Future<bool> backgroundTaskHandler() async {
       try {
         final response = await dio.get(ApiConstants.klines, queryParameters: {
           'symbol': symbol,
-          'interval': '1h',
+          'interval': interval,
           'limit': AppConstants.klineLimit,
         });
         final klines = (response.data as List)

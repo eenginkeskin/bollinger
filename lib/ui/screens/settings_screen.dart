@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:bollinger/core/constants/app_constants.dart';
 import 'package:bollinger/core/theme/app_theme.dart';
 import 'package:bollinger/providers/settings_provider.dart';
 
@@ -117,6 +118,33 @@ class SettingsScreen extends ConsumerWidget {
                         onChanged: (v) => notifier.updateParam(
                           'stdDev',
                           double.parse(v.toStringAsFixed(1)),
+                        ),
+                      ),
+
+                      const Divider(height: 1),
+
+                      // Interval selector
+                      ListTile(
+                        leading: const Icon(Icons.access_time,
+                            color: Colors.grey),
+                        title: const Text('Bildirim Zaman Dilimi'),
+                        subtitle: const Text(
+                          'Arka plan kontrolunde kullanilacak mum araligi',
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                        trailing: DropdownButton<String>(
+                          value: settings.interval,
+                          underline: const SizedBox(),
+                          dropdownColor: AppTheme.cardColor,
+                          items: AppConstants.intervals.map((i) {
+                            return DropdownMenuItem(
+                              value: i,
+                              child: Text(i),
+                            );
+                          }).toList(),
+                          onChanged: (v) {
+                            if (v != null) notifier.setInterval(v);
+                          },
                         ),
                       ),
 
