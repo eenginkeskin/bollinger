@@ -1,4 +1,4 @@
-package com.example.bollinger
+package com.enginkeskin.bollinger
 
 import io.flutter.embedding.android.FlutterActivity
 
